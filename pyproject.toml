@@ -1,0 +1,42 @@
+[project]
+name = "mapster"
+version = "1.0.0"
+description = "Transform any city into a stunning, print-ready map poster"
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi",
+    "uvicorn",
+    "pydantic-settings>=2.0.0",
+    "python-dotenv>=1.0.0",
+    "sqlalchemy>=2.0.0",
+    "psycopg2-binary>=2.9.0",
+    "geoalchemy2>=0.15.0",
+    "upstash-redis>=1.0.0",
+    "matplotlib",
+    "numpy",
+    "pandas",
+    "geopandas",
+    "osmnx",
+    "pillow",
+    "shapely",
+    "scipy",
+    "requests",
+    "networkx",
+    "geopy",
+    "tqdm",
+]
+
+[project.scripts]
+mapster = "mapster.main:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/mapster"]
+
+[tool.uv]
+dev-dependencies = []
+
+[tool.uv.sources]

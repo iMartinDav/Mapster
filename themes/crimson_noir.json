@@ -1,0 +1,17 @@
+{
+  "name": "Crimson Noir",
+  "description": "Dark blackened background with white roads and vibrant red accents",
+  "bg": "#101010",
+  "ocean": "#1A1A1A",
+  "text": "#FFFFFF",
+  "accent": "#FF3B30",
+  "gradient_color": "#101010",
+  "water": "#1A1A1A",
+  "parks": "#202020",
+  "road_motorway": "#FF3B30",
+  "road_primary": "#E0E0E0",
+  "road_secondary": "#B0B0B0",
+  "road_tertiary": "#808080",
+  "road_residential": "#606060",
+  "road_default": "#808080"
+}

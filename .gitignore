@@ -1,0 +1,61 @@
+# Environment
+.env
+.env*.local
+.env/
+env/
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.egg-info/
+*.egg
+dist/
+build/
+.venv/
+
+# uv / mise
+.python-version.venv
+.mise.toml.local
+
+# Node / Frontend
+node_modules/
+frontend/dist/
+
+# Generated Content
+posters/*.png
+posters/thumbnails/*.png
+posters/*.svg
+posters/*.json
+!posters/barcelona_feature_based_20260121_175805.json
+!posters/barcelona_feature_based_20260121_175805.preview.json
+!posters/dubai_autumn_20260121_005704.json
+!posters/dubai_autumn_20260121_005704.preview.json
+!posters/london_blueprint_20260120_223123.json
+!posters/london_blueprint_20260120_223123.preview.json
+
+# Cache
+cache/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+
+# Debug / test artifacts
+debug_*.svg
+test_*.svg
+
+# Deployment
+.vercel/
+.railway/
+.vercel

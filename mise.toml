@@ -1,0 +1,12 @@
+[tools]
+python = "3.11"
+node = "22"
+
+[env]
+_.python.venv = ".venv"
+
+[tasks]
+dev = "mise run dev:backend & mise run dev:frontend"
+"dev:backend" = "uv run uvicorn mapster.app:app --reload --port 8000"
+"dev:frontend" = "cd frontend && npm run dev"
+install = "uv sync"
