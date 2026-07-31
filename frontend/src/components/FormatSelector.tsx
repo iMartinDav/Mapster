@@ -1,6 +1,7 @@
 import React from 'react';
 
-const FormatSelector = ({ selectedFormat, onSelect }) => {
+const FormatSelector = (props: any) => {
+  const { selectedFormat, onSelect } = props;
     const formats = [
         { id: 'poster_vertical', name: 'Portrait', icon: '▮', ratio: '3:4' },
         { id: 'poster_horizontal', name: 'Landscape', icon: '▬', ratio: '4:3' },

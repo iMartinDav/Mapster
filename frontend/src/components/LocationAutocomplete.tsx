@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 
-const LocationAutocomplete = ({ onSelect, initialQuery = '' }) => {
+const LocationAutocomplete = (props: any) => {
+  const { onSelect, initialQuery = '' } = props;
   const [query, setQuery] = useState(initialQuery);
   const [suggestions, setSuggestions] = useState([]);
   const [isLoading, setIsLoading] = useState(false);

@@ -2,7 +2,8 @@ import React, { useMemo, useEffect, useRef } from 'react';
 import Map, { NavigationControl } from 'react-map-gl/maplibre';
 import 'maplibre-gl/dist/maplibre-gl.css';
 
-const LiveMapLibre = ({ colors, visibility, initialCenter = [-0.1278, 51.5074], format, onViewportChange, previewData }) => {
+const LiveMapLibre = (props: any) => {
+  const { colors, visibility, initialCenter = [-0.1278, 51.5074], format, onViewportChange, previewData } = props;
     const mapRef = useRef(null);
 
     // Fly to new location when previewData changes (e.g., user searches a city)

@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { API_URL } from '../config';
 import '../App.css';
 
-const HistoryModal = ({ onClose, onSelect }) => {
+const HistoryModal = (props: any) => {
+  const { onClose, onSelect } = props;
     const [history, setHistory] = useState([]);
     const [loading, setLoading] = useState(true);
 

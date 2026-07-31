@@ -5,7 +5,8 @@ import FormatSelector from './FormatSelector'
 import ThemeCard from './ThemeCard'
 import LocationAutocomplete from './LocationAutocomplete'
 
-const MobileLayout = ({
+const MobileLayout = (props: any) => {
+  const {
   // State
   input, setInput,
   themes,
@@ -30,7 +31,7 @@ const MobileLayout = ({
   // History modal component
   // eslint-disable-next-line no-unused-vars
   HistoryModal: HistoryModalComponent
-}) => {
+} = props;
   const [showCustomize, setShowCustomize] = useState(false)
   const [activeTab, setActiveTab] = useState('themes') // 'themes' | 'colors'
 

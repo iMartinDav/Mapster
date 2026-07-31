@@ -3,7 +3,8 @@ import { useState, useRef, memo } from 'react'
 const RETRY_DELAY_MS = 2500 // Consistent retry delay
 const MAX_RETRIES = 3
 
-const ThemeCard = memo(({ id, src, alt, isActive, onSelect, variant = 'desktop' }) => {
+const ThemeCard = memo((props: any) => {
+  const { id, src, alt, isActive, onSelect, variant = 'desktop' } = props;
   const [imageSrc, setImageSrc] = useState(src)
   const [error, setError] = useState(false)
   const [loading, setLoading] = useState(true)
