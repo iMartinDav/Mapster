@@ -33,8 +33,8 @@ COPY themes/ ./themes/
 COPY fonts/ ./fonts/
 COPY data/ ./data/
 
-# Local dirs are ephemeral (lost on redeploy) — durable history/cache live in
-# Neon Postgres, job state in Upstash Redis; these are just scratch space.
-RUN mkdir -p posters cache posters/thumbnails
+# Copy entrypoint
+COPY start.sh .
 
-CMD ["uv", "run", "python", "-m", "mapster.main"]
+# Local dirs are mapped to /data via symlinks in start.sh
+CMD ["./start.sh"]

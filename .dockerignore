@@ -1,0 +1,12 @@
+.venv/
+cache/
+frontend/
+__pycache__/
+.git/
+.vscode/
+.env
+.env.local
+.python-version
+
+tests/
+posters/

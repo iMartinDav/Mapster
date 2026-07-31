@@ -261,13 +261,20 @@ function App() {
         throw new Error('Please select a valid location from the dropdown')
       }
       
+      const lat = parseFloat(params.lat);
+      const lon = parseFloat(params.lon);
+      const latDir = lat >= 0 ? 'N' : 'S';
+      const lonDir = lon >= 0 ? 'E' : 'W';
+      const coords = `${Math.abs(lat).toFixed(4)}° ${latDir} / ${Math.abs(lon).toFixed(4)}° ${lonDir}`;
+
       // We set a mock previewData that tells LiveMapLibre and the UI we are ready
       setPreviewData({
         info: {
-          center: { lat: params.lat, lon: params.lon },
+          center: { lat, lon },
           city: params.city,
           country: params.country,
-          spaced_city: (params.city || '').split('').join(' ')
+          spaced_city: (params.city || '').split('').join(' '),
+          coordinates: coords
         }
       })
     } catch (err) {

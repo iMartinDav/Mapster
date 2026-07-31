@@ -1,0 +1,27 @@
+app = "mapster-gis-backend"
+primary_region = "ams"
+
+[build]
+  dockerfile = "Dockerfile"
+
+swap_size_mb = 512
+
+[env]
+  PORT = "8080"
+  DEBUG = "false"
+
+[mounts]
+  source = "mapster_data"
+  destination = "/data"
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = true
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ["app"]
+
+[vm]
+  size = "shared-cpu-1x"
+  memory = "512mb"

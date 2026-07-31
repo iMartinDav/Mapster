@@ -1,20 +1,67 @@
 import React, { useMemo, useEffect, useRef } from 'react';
 import Map, { NavigationControl } from 'react-map-gl/maplibre';
+import * as maplibregl from 'maplibre-gl';
+import workerUrl from 'maplibre-gl/dist/maplibre-gl-csp-worker.js?url';
 import 'maplibre-gl/dist/maplibre-gl.css';
 
-const LiveMapLibre = (props: any) => {
+if (maplibregl.setWorkerUrl) {
+    maplibregl.setWorkerUrl(workerUrl);
+}
+
+export interface LiveMapLibreProps {
+    colors: {
+        bg: string;
+        water: string;
+        parks: string;
+        road_residential: string;
+        road_tertiary: string;
+        road_secondary: string;
+        road_primary: string;
+        road_motorway: string;
+        accent: string;
+    };
+    visibility?: {
+        parks?: boolean;
+        water?: boolean;
+        road_residential?: boolean;
+        road_tertiary?: boolean;
+        road_secondary?: boolean;
+        road_primary?: boolean;
+        road_motorway?: boolean;
+    };
+    initialCenter?: [number, number];
+    format?: string;
+    onViewportChange?: (viewport: { lat: number; lon: number; distance: number }) => void;
+    previewData?: {
+        info?: {
+            center?: { lat: number; lon: number };
+            spaced_city?: string;
+            country?: string;
+            coordinates?: string;
+        };
+    };
+}
+
+const LiveMapLibre: React.FC<LiveMapLibreProps> = (props) => {
   const { colors, visibility, initialCenter = [-0.1278, 51.5074], format, onViewportChange, previewData } = props;
     const mapRef = useRef(null);
 
     // Fly to new location when previewData changes (e.g., user searches a city)
-    useEffect(() => {
+    const flyToCity = () => {
         if (mapRef.current && previewData?.info?.center) {
-            mapRef.current.flyTo({
-                center: [previewData.info.center.lon, previewData.info.center.lat],
-                zoom: 12,
-                duration: 2000
-            });
+            const map = mapRef.current.getMap ? mapRef.current.getMap() : mapRef.current;
+            if (map && map.flyTo) {
+                map.flyTo({
+                    center: [previewData.info.center.lon, previewData.info.center.lat],
+                    zoom: 12,
+                    duration: 2000
+                });
+            }
         }
+    };
+
+    useEffect(() => {
+        flyToCity();
     }, [previewData]);
 
     // Determine aspect ratio for the container
@@ -176,6 +223,7 @@ const LiveMapLibre = (props: any) => {
             {/* The actual MapLibre WebGL canvas */}
             <Map
                 ref={mapRef}
+                mapLibre={maplibregl}
                 initialViewState={{
                     longitude: initialCenter[0],
                     latitude: initialCenter[1],
@@ -187,6 +235,7 @@ const LiveMapLibre = (props: any) => {
                 dragPan={true}
                 scrollZoom={true}
                 attributionControl={false}
+                onLoad={() => flyToCity()}
                 onMoveEnd={(e) => {
                     if (onViewportChange) {
                         const { lng, lat } = e.viewState;
@@ -269,7 +318,7 @@ const LiveMapLibre = (props: any) => {
                         margin: 0,
                         opacity: 0.6
                     }}>
-                        PAN TO EXPLORE • ZOOM FOR DETAIL
+                        {previewData?.info?.coordinates || '0.0000° N / 0.0000° E'}
                     </p>
                 </div>
             )}
