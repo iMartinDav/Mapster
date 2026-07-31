@@ -39,7 +39,7 @@
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.4.24",
     "globals": "^16.5.0",
-    "typescript": "^7.0.2",
+    "typescript": "^7.1.0-dev.20260731.1",
     "vite": "^7.2.4"
   }
 }
