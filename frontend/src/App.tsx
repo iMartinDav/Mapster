@@ -1,5 +1,6 @@
 // Mapster v1.1 - Hobby plan optimizations
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useCallback, useEffect } from 'react'
+import { useQuery } from '@tanstack/react-query'
 import './App.css'
 import { API_URL } from './config'
 import LiveMapLibre from './components/LiveMapLibre'
@@ -35,7 +36,15 @@ const LoadingProgress = ({ progress, message }) => {
 }
 
 function App() {
-  const [themes, setThemes] = useState([])
+  const { data: themesData, isLoading: themesLoading } = useQuery({
+    queryKey: ['themes'],
+    queryFn: async () => {
+      const res = await fetch(`${API_URL}/themes`)
+      if (!res.ok) throw new Error('Network response was not ok')
+      return res.json()
+    }
+  })
+  const themes = themesData?.themes || []
   const [input, setInput] = useState({
     location: '', // combined location query
     city: '',
@@ -182,30 +191,24 @@ function App() {
     road_residential: true
   })
 
-  // Load themes
-  useEffect(() => {
-    const controller = new AbortController()
-    const timeoutId = setTimeout(() => controller.abort(), 30000)
-    
-    fetch(`${API_URL}/themes`, { signal: controller.signal })
-      .then(res => {
-        clearTimeout(timeoutId)
-        return res.json()
-      })
-      .then(data => {
-        setThemes(data.themes)
-        if (data.themes.length > 0) {
-          const defaultTheme = data.themes.find(t => t.id === 'terracotta') || data.themes[0]
-          updateColorsFromTheme(defaultTheme)
-        }
-      })
-      .catch(err => {
-        clearTimeout(timeoutId)
-        if (err.name !== 'AbortError') {
-          console.error("Failed to load themes", err)
-        }
-      })
+  // When themes load, set default colors if not already modified
+  const defaultThemeLoaded = useCallback((themesList) => {
+    if (themesList && themesList.length > 0) {
+      const defaultTheme = themesList.find(t => t.id === 'terracotta') || themesList[0]
+      // Only set if we're in default state (bg is #000000 initially)
+      if (customColors.bg === '#000000') {
+        updateColorsFromTheme(defaultTheme)
+      }
+    }
   }, [])
+
+  // Call the hook manually in effect to trigger initialization
+  // (We use a simple effect here just for the initial color setup)
+  useEffect(() => {
+    if (themes.length > 0) {
+      defaultThemeLoaded(themes)
+    }
+  }, [themes, defaultThemeLoaded])
 
   // Update custom colors when theme changes - REMOVED to avoid conflict with history restore
   // logic moved to handleThemeSelect
@@ -628,7 +631,7 @@ function App() {
               </div>
               <div className="accordion-content">
                 <div className="theme-grid">
-                  {themes.length === 0 && <div className="loading-themes">Loading themes...</div>}
+                  {themesLoading && <div className="loading-themes">Loading themes...</div>}
                   {themes.map(t => (
                     <ThemeCard key={t.id} id={t.id} src={t.preview_url} alt={t.name} isActive={input.theme === t.id} onSelect={handleThemeSelect} variant="desktop" />
                   ))}

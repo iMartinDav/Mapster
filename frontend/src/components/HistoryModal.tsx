@@ -1,61 +1,43 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { API_URL } from '../config';
 import '../App.css';
 
 const HistoryModal = (props: any) => {
-  const { onClose, onSelect } = props;
-    const [history, setHistory] = useState([]);
-    const [loading, setLoading] = useState(true);
+    const { onClose, onSelect } = props;
+    const queryClient = useQueryClient();
 
-    useEffect(() => {
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 30000);
-        
-        fetch(`${API_URL}/history`, { signal: controller.signal })
-            .then(res => {
-                clearTimeout(timeoutId);
-                return res.json();
-            })
-            .then(data => {
-                setHistory(data.history);
-                setLoading(false);
-            })
-            .catch(err => {
-                clearTimeout(timeoutId);
-                if (err.name !== 'AbortError') {
-                    console.error("Failed to load history", err);
-                }
-                setLoading(false);
-            });
-    }, []);
+    const { data: historyData, isLoading: loading } = useQuery({
+        queryKey: ['history'],
+        queryFn: async () => {
+            const res = await fetch(`${API_URL}/history`);
+            if (!res.ok) throw new Error('Network response was not ok');
+            return res.json();
+        }
+    });
 
-    const handleDelete = async (e, filename) => {
-        e.stopPropagation();
-        if (!confirm('Are you sure you want to delete this map?')) return;
+    const history = historyData?.history || [];
 
-        try {
-            const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 15000);
-            
+    const deleteMutation = useMutation({
+        mutationFn: async (filename: string) => {
             const res = await fetch(`${API_URL}/history/${filename}`, {
                 method: 'DELETE',
-                signal: controller.signal
             });
-            
-            clearTimeout(timeoutId);
-
-            if (res.ok) {
-                setHistory(prev => prev.filter(item => item.filename !== filename));
-            } else {
-                console.error("Failed to delete map");
-            }
-        } catch (err) {
-            if (err.name === 'AbortError') {
-                console.error("Delete request timed out");
-            } else {
-                console.error("Error deleting map:", err);
-            }
+            if (!res.ok) throw new Error('Failed to delete map');
+            return filename;
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['history'] });
+        },
+        onError: (err) => {
+            console.error("Error deleting map:", err);
         }
+    });
+
+    const handleDelete = async (e: React.MouseEvent, filename: string) => {
+        e.stopPropagation();
+        if (!confirm('Are you sure you want to delete this map?')) return;
+        deleteMutation.mutate(filename);
     };
 
     return (
