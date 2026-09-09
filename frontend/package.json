@@ -17,7 +17,7 @@
     "leaflet.fullscreen": "^5.3.3",
     "leaflet.markercluster": "^1.5.3",
     "lucide-react": "^1.28.0",
-    "maplibre-gl": "4.7.1",
+    "maplibre-gl": "6.4.1",
     "pmtiles": "^4.4.1",
     "react": "^19.2.0",
     "react-confetti": "^6.4.0",
